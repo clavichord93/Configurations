@@ -1,46 +1,31 @@
 set nocompatible
-filetype off
 
 if exists('$TMUX')
     set term=screen-256color
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vundle
+" => Vim-Plugn('~/.vim/plugged')
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call plug#begin('~/.vim/plugged')
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+Plug 'vim-scripts/a.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+Plug 'majutsushi/tagbar'
+Plug 'tomasr/molokai'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'altercation/vim-colors-solarized'
 
-Plugin 'VundleVim/Vundle.vim'
+call plug#end()
 
-Plugin 'tpope/vim-fugitive'
-Plugin 'a.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'majutsushi/tagbar'
-"Plugin 'SirVer/ultisnips'
-"Plugin 'honza/vim-snippets'
-"Plugin 'derekwyatt/vim-scala'
-Plugin 'rizzatti/dash.vim'
-Plugin 'tomasr/molokai'
-"Plugin 'bling/vim-airline'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-"Plugin 'edkolev/tmuxline.vim'
-"Plugin 'Rip-Rip/clang_complete'
-"Plugin 'Valloric/YouCompleteMe'
-"Plugin 'tomtom/tlib_vim'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'altercation/vim-colors-solarized'
-"Plugin 'ctrlpvim/ctrlp.vim'
-
-call vundle#end()            " required
-filetype plugin indent on    " required
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Important!
+filetype plugin indent on
 
 " Set to auto read when a file is changed from the outside
 set autoread
@@ -107,7 +92,8 @@ set novisualbell
 set t_vb=
 set tm=500
 
-set guifont=DejaVuSansMonoForPowerline:h11
+set guifont=Menlo:h12
+command! -nargs=* FontSize set guifont=Menlo:h<args>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
@@ -115,8 +101,8 @@ set guifont=DejaVuSansMonoForPowerline:h11
 " Enable syntax highlighting
 syntax enable
 set background=dark
-"colorscheme solarized
-colorscheme molokai
+colorscheme solarized
+"colorscheme molokai
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -142,12 +128,13 @@ set sw=4
 
 " Linebreak on 500 characters
 set lbr
-set tw=500
+"set tw=80
 
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
 set nu
+"set relativenumber
 set cursorline
 
 set foldmethod=marker
@@ -176,36 +163,43 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" Close the current buffer
-map <leader>bd :Bclose<cr>
+" Useful mappings for managing tabs
+" Don't show tab bar (e); right-side scroll bar (r); left-side scroll bar (L)
+set guioptions-=e
+set guioptions-=r
+set guioptions-=L
+set stal=2
 
+" buffers operations
+"map <leader>bn :bn<cr>
+"map <leader>bp :bp<cr>
+map <leader>l :bp<cr>
+map <leader>r :bn<cr>
+map <leader>bl :ls<cr>:b<space>
+" Close the current buffer
+map <leader>bd :bdelete<cr>
 " Close all the buffers
 map <leader>ba :1,1000 bd!<cr>
-
 "Edit certain buffer
-map <leader>bf :buffer
+map <leader>bf :buffer<space>
+map <leader>be :e <c-r>=expand("%:p:h")<cr>/
 
-" Useful mappings for managing tabs
-map <leader>tn :tabnew
-map <leader>to :tabonly
-map <leader>tc :tabclose
-map <leader>tm :tabmove
-map <leader>r :tabnext<cr>
-map <leader>l :tabprevious<cr>
-
+" tabs operations
+"map <leader>tn :tabnew
+"map <leader>to :tabonly
+"map <leader>tc :tabclose
+"map <leader>tm :tabmove
+"map <leader>tr :tabnext<cr>
+"map <leader>tl :tabprevious<cr>
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+"map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " Switch CWD to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers
-try
-    set switchbuf=useopen,usetab,newtab
-    set stal=2
-catch
-endtry
+set switchbuf=useopen
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
@@ -230,44 +224,19 @@ func! DeleteTrailingWS()
 endfunc
 autocmd BufWrite *.py :call DeleteTrailingWS()
 autocmd BufWrite *.coffee :call DeleteTrailingWS()
+command! DeleteTrailingWhiteSpace :call DeleteTrailingWS()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => .Vimrc Editing
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"Switch to Buf
-function! SwitchToBuf(filename)
-    " find in current tab
-    let bufwinnr = bufwinnr(a:filename)
-    if bufwinnr != -1
-        exec bufwinnr . "wincmd w"
-        return
-    else
-    " find in each tab
-        tabfirst
-        let tab = 1
-        while tab <= tabpagenr("$")
-            let bufwinnr = bufwinnr(a:filename)
-            if bufwinnr != -1
-                exec "normal " . tab . "gt"
-                exec bufwinnr . "wincmd w"
-                return
-            endif
-            tabnext
-            let tab = tab + 1
-        endwhile
-        " not exist, new tab
-        exec "tabnew " . a:filename
-    endif
-endfunction
-
-"Fast reloading of the _vimrc
+"Fast reloading of the .vimrc
 map <silent> <leader>ss :source ~/.vimrc<cr>
 
-"Fast editing of _vimrc
-map <silent> <leader>ee :call SwitchToBuf("~/.vimrc")<cr>
+"Fast editing of .vimrc
+map <silent> <leader>ee :e ~/.vimrc<cr>
 
-"When _vimrc is edited, reload it
-autocmd! bufwritepost .vimrc source ~/.vimrc
+"When .vimrc is edited, reload it
+autocmd! bufwritepost .vimrc source ~/.vimrc | :AirlineRefresh
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
@@ -305,6 +274,7 @@ set helplang=cn
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Cscope
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set csprg=/usr/local/bin/cscope
 map <C-F11> :!cscope -Rbq<CR>
 set cscopequickfix=s-,c-,d-,i-,t-,e-
 nmap <C-_>s :cs find s<C-R>=expand("<cword>")<CR><CR>
@@ -319,16 +289,16 @@ nmap <C-_>d :cs find d<C-R>=expand("<cword>")<CR><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Session Options
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-:set sessionoptions-=curdir
-:set sessionoptions+=sesdir
+set sessionoptions-=curdir
+set sessionoptions+=sesdir
+set sessionoptions+=tabpages,globals
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Compiler Options
+" => GCC/G++/GDB Options
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set makeprg=g++\ %:p\ -o\ %:p:r\ -Wall
-command! -nargs=* Gcc !gcc-6 % -o %:r -Wall -static -DLOCAL_JUDGE <args>
-command! -nargs=* Gpp !g++-6 % -o %:r -Wall -static -DLOCAL_JUDGE <args>
-command! -nargs=* Debug !g++-6 % -o %:r -Wall -g -static -DLOCAL_JUDGE -Ddebug <args>
+command! -nargs=* Gcc !gcc-7 % -o %:r -Wall -DLOCAL_JUDGE <args>
+command! -nargs=* Gpp !g++-7 % -o %:r -Wall -DLOCAL_JUDGE <args>
+command! -nargs=* Debug !g++-7 % -o %:r -Wall -g -DLOCAL_JUDGE -Ddebug <args>
 command! -nargs=0 Gdb !gdb %:r
 command! -nargs=* Run !%:p:r <args>
 
@@ -338,6 +308,11 @@ map <F7> :Debug <CR>
 map <F8> :make <CR>
 map <F9> :Gpp <CR>
 map <F3> :Run <CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vimgrep related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command! -nargs=1 Find lvim /<args>/g *
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => NERDTree
@@ -350,23 +325,12 @@ nmap nt :NERDTreeToggle<CR>
 nmap tg :TagbarToggle<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => YouCompleteMe
+" => vim-airline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"let g:ycm_global_ycm_extra_conf = '/Users/Zheng/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-"let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-"let g:ycm_key_invoke_completion = '<M-Tab>'
-"let g:ycm_server_python_interpreter = '/usr/bin/python'
-"let g:ycm_python_binary_path = 'python'
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => clang_complete
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"let g:clang_library_path="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libclang.dylib"
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => airline
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline_theme='solarized'
+let g:airline_left_sep=''
+let g:airline_right_sep=''
 set laststatus=2
-"let g:airline#extensions#tabline#enabled = 1
