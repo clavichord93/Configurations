@@ -1,0 +1,30 @@
+# This is the local http proxy server port.
+# Note there is another SOCKS5 proxy server starts at port+1 automatically.
+port: 9090
+adapter:
+     # There is a 'direct' adapter that connect directly to target host without proxy.
+  - id: proxy
+    type: ss
+    host: 23.83.234.174
+    port: 443
+    method: AES-256-CFB
+    password: OTc1MmQ0Nm
+rule:
+  - type: list
+    file: ~/.SpechtLite/directlist
+    adapter: direct
+  - type: iplist
+    file: ~/.SpechtLite/directiprange
+    adapter: direct
+  - type: country
+    country: CN
+    match: true
+    adapter: direct
+  - type: country
+    country: --
+    match: true
+    adapter: direct
+  - type: DNSFail
+    adapter: proxy
+  - type: all
+    adapter: proxy
