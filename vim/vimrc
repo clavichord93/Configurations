@@ -179,7 +179,7 @@ map <leader>bl :ls<cr>:b<space>
 " Close the current buffer
 map <leader>bd :bdelete<cr>
 " Close all the buffers
-map <leader>ba :1,1000 bd!<cr>
+map <leader>ba :bufdo bd<cr>
 "Edit certain buffer
 map <leader>bf :buffer<space>
 map <leader>be :e <c-r>=expand("%:p:h")<cr>/
@@ -318,6 +318,7 @@ command! -nargs=1 Find lvim /<args>/g *
 " => NERDTree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nmap nt :NERDTreeToggle<CR>
+let NERDTreeQuitOnOpen=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Tagbar
