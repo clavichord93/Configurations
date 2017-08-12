@@ -128,6 +128,7 @@ set sw=4
 
 " Linebreak on 500 characters
 set lbr
+set cc=81
 "set tw=80
 
 set ai "Auto indent
