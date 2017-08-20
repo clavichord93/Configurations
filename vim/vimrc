@@ -14,7 +14,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'majutsushi/tagbar'
-Plug 'tomasr/molokai'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'
@@ -92,9 +91,6 @@ set novisualbell
 set t_vb=
 set tm=500
 
-set guifont=Menlo:h12
-command! -nargs=* FontSize set guifont=Menlo:h<args>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -102,7 +98,8 @@ command! -nargs=* FontSize set guifont=Menlo:h<args>
 syntax enable
 set background=dark
 colorscheme solarized
-"colorscheme molokai
+set guifont=Menlo:h12
+command! -nargs=* FontSize set guifont=Menlo:h<args>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -122,9 +119,10 @@ set expandtab
 set smarttab
 
 " 1 tab == 4 spaces
-set sts=4
-set ts=4
-set sw=4
+autocmd Filetype python setlocal ts=4 sts=4 sw=4
+autocmd Filetype cpp setlocal ts=2 sts=2 sw=2
+autocmd Filetype c setlocal ts=2 sts=2 sw=2
+autocmd Filetype cuda setlocal ts=2 sts=2 sw=2
 
 " Linebreak on 500 characters
 set lbr
@@ -139,14 +137,6 @@ set nu
 set cursorline
 
 set foldmethod=marker
-
-""""""""""""""""""""""""""""""
-" => Visual mode related
-""""""""""""""""""""""""""""""
-" Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
-vnoremap <silent> * :call VisualSelection('f')<CR>
-vnoremap <silent> # :call VisualSelection('b')<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
@@ -172,16 +162,11 @@ set guioptions-=L
 set stal=2
 
 " buffers operations
-"map <leader>bn :bn<cr>
-"map <leader>bp :bp<cr>
 map <leader>l :bp<cr>
 map <leader>r :bn<cr>
 map <leader>bl :ls<cr>:b<space>
-" Close the current buffer
 map <leader>bd :bdelete<cr>
-" Close all the buffers
 map <leader>ba :bufdo bd<cr>
-"Edit certain buffer
 map <leader>bf :buffer<space>
 map <leader>be :e <c-r>=expand("%:p:h")<cr>/
 
@@ -192,8 +177,6 @@ map <leader>be :e <c-r>=expand("%:p:h")<cr>/
 "map <leader>tm :tabmove
 "map <leader>tr :tabnext<cr>
 "map <leader>tl :tabprevious<cr>
-" Opens a new tab with the current buffer's path
-" Super useful when editing files in the same directory
 "map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " Switch CWD to the directory of the open buffer
@@ -205,7 +188,7 @@ set switchbuf=useopen
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \    exe "normal! g`\"" |
+    \     exe "normal! g`\"" |
     \ endif
 " Remember info about open buffers on close
 set viminfo^=%
@@ -271,6 +254,14 @@ endfunction
 
 " Set helplang
 set helplang=cn
+
+""""""""""""""""""""""""""""""
+" => Visual mode related
+""""""""""""""""""""""""""""""
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Cscope
