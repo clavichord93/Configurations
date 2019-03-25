@@ -16,8 +16,13 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'majutsushi/tagbar'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'altercation/vim-colors-solarized'
+"Plug 'iCyMind/NeoSolarized'
+Plug 'dracula/vim', { 'as': 'dracula' }
+"Plug 'altercation/vim-colors-solarized'
 Plug 'dracula/vim'
+"Plug 'Shougo/deoplete.nvim'
+"Plug 'roxma/nvim-yarp'
+"Plug 'roxma/vim-hug-neovim-rpc'
 
 call plug#end()
 
@@ -37,6 +42,9 @@ let g:mapleader = ","
 
 " Fast saving
 nmap <leader>w :w!<cr>
+
+set shell=/usr/local/bin/zsh
+set belloff=all
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -97,11 +105,14 @@ set tm=500
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
 syntax enable
+set termguicolors
 set background=dark
-"colorscheme solarized
+"colorscheme NeoSolarized
 colorscheme dracula
 set guifont=Menlo:h12
 command! -nargs=* FontSize set guifont=Menlo:h<args>
+set guicursor+=a:blinkon0
+set mouse+=a
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -122,10 +133,8 @@ set smarttab
 
 " 1 tab == 4 spaces
 autocmd Filetype python setlocal ts=4 sts=4 sw=4
-autocmd Filetype cpp setlocal ts=2 sts=2 sw=2
-autocmd Filetype c setlocal ts=2 sts=2 sw=2
-autocmd Filetype cuda setlocal ts=2 sts=2 sw=2
-autocmd Filetype json setlocal ts=2 sts=2 sw=2
+autocmd Filetype python,java setlocal ts=4 sts=4 sw=4
+autocmd Filetype cpp,c,cuda,json,tex setlocal ts=2 sts=2 sw=2
 
 " Linebreak on 500 characters
 set lbr
@@ -291,9 +300,9 @@ set sessionoptions+=tabpages,globals
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => GCC/G++/GDB Options
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-command! -nargs=* Gcc !gcc-7 % -o %:r -Wall -DLOCAL_JUDGE <args>
-command! -nargs=* Gpp !g++-7 % -o %:r -Wall -DLOCAL_JUDGE <args>
-command! -nargs=* Debug !g++-7 % -o %:r -Wall -g -DLOCAL_JUDGE -Ddebug <args>
+command! -nargs=* Gcc !gcc-8 % -o %:r -Wall -DLOCAL_JUDGE <args>
+command! -nargs=* Gpp !g++-8 % -o %:r --std=c++11 -Wall -DLOCAL_JUDGE <args>
+command! -nargs=* Debug !g++-8 % -o %:r -Wall -g -DLOCAL_JUDGE -Ddebug <args>
 command! -nargs=0 Gdb !gdb %:r
 command! -nargs=* Run !%:p:r <args>
 
@@ -331,3 +340,8 @@ let g:airline_theme='dracula'
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 set laststatus=2
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Deoplete
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"let g:deoplete#enable_at_startup = 1
