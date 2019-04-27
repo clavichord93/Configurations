@@ -19,7 +19,7 @@ Plug 'vim-airline/vim-airline-themes'
 "Plug 'iCyMind/NeoSolarized'
 Plug 'dracula/vim', { 'as': 'dracula' }
 "Plug 'altercation/vim-colors-solarized'
-Plug 'dracula/vim'
+"Plug 'dracula/vim'
 "Plug 'Shougo/deoplete.nvim'
 "Plug 'roxma/nvim-yarp'
 "Plug 'roxma/vim-hug-neovim-rpc'
